@@ -18,7 +18,7 @@ class Program
         // Lista para almacenar los pedidos del cliente
         List<Pedido> carrito = new List<Pedido>();
 
-        // Aquí pondremos el menú (lo haremos en el siguiente paso)
+        // Aquí pondremos el menú
         bool salir = false;
 
         while (!salir)
@@ -37,14 +37,53 @@ class Program
             {
                 case "1":
                     // Mostrar productos
+                    Console.WriteLine("\nElige el producto que quieres añadir (número):");
                     for (int i = 0; i < productos.Count; i++)
                     {
                         Console.WriteLine($"{i + 1}. {productos[i].Nombre} - ${productos[i].Precio}");
                     }
+
+                    // Leer la elección del usuario
+                    if (int.TryParse(Console.ReadLine(), out int productoIndex) &&
+                        productoIndex >= 1 && productoIndex <= productos.Count)
+                    {
+                        Producto seleccionado = productos[productoIndex - 1];
+
+                        // Preguntar cantidad
+                        Console.Write($"¿Cuántas unidades de {seleccionado.Nombre} quieres añadir? ");
+                        if (int.TryParse(Console.ReadLine(), out int cantidad) && cantidad > 0)
+                        {
+                            // Revisar si ya está en el carrito
+                            Pedido pedidoExistente = carrito.Find(p => p.Producto == seleccionado);
+                            if (pedidoExistente != null)
+                            {
+                                pedidoExistente.Cantidad += cantidad;
+                            }
+                            else
+                            {
+                                carrito.Add(new Pedido(seleccionado, cantidad));
+                            }
+
+                            Console.WriteLine($"{cantidad} unidad(es) de {seleccionado.Nombre} añadidas al carrito.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Cantidad inválida.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Producto inválido.");
+                    }
                     break;
 
                 case "2":
-                    // Añadir producto al carrito (lo haremos en el siguiente paso)
+                    // Añadir producto al carrito 
+                    Console.Write("/nElige el producto que quieres añadir (número):");
+                    for (int i = 0; i < productos.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {productos[i].Nombre} - ${productos[i].Precio}");
+                    }
                     break;
 
                 case "3":
